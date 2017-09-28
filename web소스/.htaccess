@@ -1,0 +1,35 @@
+#==========================================================================
+# php flag
+PHP_FLAG register_globals OFF
+
+#================= sub domain rule start =================
+RewriteEngine On
+
+#Internal Redirection Loop stop
+RewriteCond %{ENV:REDIRECT_STATUS} 200
+RewriteRule .* - [L]
+
+#================= access rule start =================
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} !^http(s)?://test\.phps\.kr [NC]
+#RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?test\.com [NC]
+#RewriteRule .*\.(jpe?g|gif|png|swf|flv)$ - [NC,F]
+#================== access rule end ==================
+
+#===== exception start =====
+# tld
+RewriteCond %{HTTP_HOST} !^([a-z0-9-]+)\.([a-z]{2,})(:[0-9]+)?$ [NC]
+RewriteCond %{HTTP_HOST} !^([a-z0-9-]+)\.co\.([a-z]{2,})(:[0-9]+)?$ [NC]
+# kr domain
+RewriteCond %{HTTP_HOST} !^([a-z0-9-]+)\.(xn--3e0b707e)(:[0-9]+)?$ [NC]
+RewriteCond %{HTTP_HOST} !^([a-z0-9-]+)(\.(co|or|ne|re|pe|go|ac|hs|ms|es|sc|kg|seoul|busan|daegu|incheon|gwangju|daejeon|ulsan|gyeonggi|gangwon|chungbuk|chungnam|jeonbuk|jeonnam|gyeongbuk|gyeongnam|jeju))?\.(kr)(:[0-9]+)?$ [NC]
+
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteCond %{HTTP_HOST} !\.phps\.kr$ [NC]
+#====== exception end ======
+
+# host check & rewrite
+RewriteCond %{HTTP_HOST} ^([a-z0-9-]+)\. [NC]
+RewriteRule ^(.*)$ %{DOCUMENT_ROOT}/%1/$1 [L]
+#================== sub domain rule end ==================
+#==========================================================================
